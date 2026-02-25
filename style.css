@@ -1,0 +1,221 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e;
+  color: #fff;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---- Screens ---- */
+
+.screen {
+  display: none;
+  height: 100%;
+  width: 100%;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ---- Setup Screen ---- */
+
+#setup-screen {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+#setup-screen h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+#setup-screen .subtitle {
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  color: #aaa;
+}
+
+.time-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 1rem;
+}
+
+.time-btn {
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  font-weight: 700;
+  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  background: #16213e;
+  color: #fff;
+  transition: transform 0.1s, background 0.15s;
+  min-height: 5rem;
+}
+
+.time-btn:hover {
+  background: #0f3460;
+}
+
+.time-btn:active {
+  transform: scale(0.96);
+  background: #533483;
+}
+
+/* ---- Game Screen ---- */
+
+#game-screen {
+  flex-direction: column;
+  position: relative;
+}
+
+.player-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+}
+
+/* Player 2 (top) is rotated 180° so it faces the opposite player */
+.player-area.top {
+  background: #0f3460;
+  color: #fff;
+  transform: rotate(180deg);
+}
+
+.player-area.bottom {
+  background: #16213e;
+  color: #fff;
+}
+
+.player-area.active-turn {
+  animation: pulse-glow 1.2s ease-in-out infinite;
+}
+
+.player-area.top.active-turn {
+  background: #1a5276;
+}
+
+.player-area.bottom.active-turn {
+  background: #1a4731;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.player-area.time-up {
+  background: #8b0000 !important;
+  animation: none;
+}
+
+.player-area:active:not(.paused):not(.time-up) {
+  filter: brightness(1.2);
+}
+
+.timer {
+  font-size: clamp(4rem, 20vw, 10rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.player-label {
+  font-size: clamp(1rem, 3.5vw, 1.6rem);
+  opacity: 0.6;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+/* ---- Controls Bar ---- */
+
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.6rem 1rem;
+  background: #1a1a2e;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.control-btn {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  padding: 0.6rem 1.6rem;
+  border: 2px solid #555;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  min-width: 4rem;
+  min-height: 3rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.control-btn:hover {
+  background: #333;
+  border-color: #888;
+}
+
+.control-btn:active {
+  background: #533483;
+  border-color: #533483;
+}
+
+/* ---- Responsive tweaks ---- */
+
+@media (max-height: 500px) {
+  .timer {
+    font-size: clamp(2.5rem, 14vw, 5rem);
+  }
+  #controls {
+    padding: 0.3rem 0.5rem;
+  }
+}
+
+/* Landscape: side-by-side layout */
+@media (orientation: landscape) and (max-height: 500px) {
+  #game-screen {
+    flex-direction: row;
+  }
+
+  .player-area.top {
+    transform: none;
+  }
+
+  #controls {
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+}
