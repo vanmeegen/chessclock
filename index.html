@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Chess Clock - Simple timer for chess games">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Chess Clock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Setup Screen -->
+  <div id="setup-screen" class="screen active">
+    <h1>Chess Clock</h1>
+    <p class="subtitle">Select time per player</p>
+    <div class="time-buttons">
+      <button class="time-btn" data-minutes="1">1 min</button>
+      <button class="time-btn" data-minutes="5">5 min</button>
+      <button class="time-btn" data-minutes="10">10 min</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="screen">
+    <button id="player-top" class="player-area top" aria-label="Player 2 clock">
+      <div class="timer" id="timer-top">5:00</div>
+      <div class="player-label">Player 2</div>
+    </button>
+
+    <div id="controls">
+      <button id="btn-pause" class="control-btn" aria-label="Pause">&#10074;&#10074;</button>
+      <button id="btn-reset" class="control-btn" aria-label="Reset">&#8634;</button>
+    </div>
+
+    <button id="player-bottom" class="player-area bottom" aria-label="Player 1 clock">
+      <div class="timer" id="timer-bottom">5:00</div>
+      <div class="player-label">Player 1</div>
+    </button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
