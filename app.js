@@ -213,10 +213,77 @@
     }
   });
 
+  // ---- PWA Install Prompt ----
+  var deferredPrompt = null;
+  var btnInstall = document.getElementById('btn-install');
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    btnInstall.hidden = false;
+  });
+
+  btnInstall.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function () {
+      deferredPrompt = null;
+      btnInstall.hidden = true;
+    });
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferredPrompt = null;
+    btnInstall.hidden = true;
+  });
+
+  // ---- PWA Auto-Update ----
+  var updateToast = document.getElementById('update-toast');
+  var btnUpdate = document.getElementById('btn-update');
+
+  function showUpdateToast() {
+    updateToast.hidden = false;
+  }
+
+  btnUpdate.addEventListener('click', function () {
+    window.location.reload();
+  });
+
+  // Listen for messages from the service worker
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.addEventListener('message', function (e) {
+      if (e.data && e.data.type === 'SW_UPDATED') {
+        showUpdateToast();
+      }
+    });
+  }
+
   // ---- PWA Service Worker Registration ----
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('sw.js').then(function (reg) {
+        // Check for updates periodically (every 60 seconds)
+        setInterval(function () {
+          reg.update();
+        }, 60 * 1000);
+
+        // Detect when a new service worker is waiting or installing
+        reg.addEventListener('updatefound', function () {
+          var newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', function () {
+              if (newWorker.state === 'activated') {
+                showUpdateToast();
+              }
+            });
+          }
+        });
+      });
+    });
+
+    // If the controller changes (new SW took over), offer reload
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      showUpdateToast();
     });
   }
 })();

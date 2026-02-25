@@ -1,4 +1,4 @@
-var CACHE_NAME = 'chess-clock-v1';
+var CACHE_NAME = 'chess-clock-v2';
 var ASSETS = [
   './',
   './index.html',
@@ -19,7 +19,7 @@ self.addEventListener('install', function (event) {
   self.skipWaiting();
 });
 
-// Activate – clean up old caches
+// Activate – clean up old caches, notify clients
 self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
@@ -30,16 +30,33 @@ self.addEventListener('activate', function (event) {
           return caches.delete(key);
         })
       );
+    }).then(function () {
+      return self.clients.claim();
+    }).then(function () {
+      return self.clients.matchAll();
+    }).then(function (clients) {
+      clients.forEach(function (client) {
+        client.postMessage({ type: 'SW_UPDATED' });
+      });
     })
   );
-  self.clients.claim();
 });
 
-// Fetch – serve from cache, fall back to network
+// Fetch – stale-while-revalidate: serve from cache immediately, update cache in background
 self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then(function (response) {
-      return response || fetch(event.request);
+    caches.open(CACHE_NAME).then(function (cache) {
+      return cache.match(event.request).then(function (cached) {
+        var networkFetch = fetch(event.request).then(function (response) {
+          if (response.ok) {
+            cache.put(event.request, response.clone());
+          }
+          return response;
+        }).catch(function () {
+          return cached;
+        });
+        return cached || networkFetch;
+      });
     })
   );
 });
