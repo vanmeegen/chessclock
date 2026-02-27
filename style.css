@@ -75,7 +75,7 @@ html, body {
 
 .wheel-container {
   position: relative;
-  height: 200px;
+  height: 40px;
   width: 80px;
   overflow: hidden;
   border-radius: 0.75rem;
@@ -121,29 +121,46 @@ html, body {
   z-index: 2;
 }
 
-.wheel-mask {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 80px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.wheel-mask.top {
-  top: 0;
-  background: linear-gradient(to bottom, #16213e 0%, transparent 100%);
-}
-
-.wheel-mask.bottom {
-  bottom: 0;
-  background: linear-gradient(to top, #16213e 0%, transparent 100%);
-}
-
 .wheel-label {
   font-size: 0.9rem;
   color: #aaa;
   font-weight: 500;
+}
+
+/* ---- Mute Button ---- */
+
+.mute-btn {
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.15s;
+}
+
+.mute-btn:hover {
+  background: rgba(83, 52, 131, 0.3);
+}
+
+.mute-btn:active {
+  background: #533483;
+}
+
+.mute-btn .icon-sound-off {
+  display: none;
+}
+
+.mute-btn.muted .icon-sound-on {
+  display: none;
+}
+
+.mute-btn.muted .icon-sound-off {
+  display: block;
 }
 
 /* ---- Presets ---- */

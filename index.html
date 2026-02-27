@@ -17,26 +17,34 @@
   <!-- Setup Screen -->
   <div id="setup-screen" class="screen active">
     <h1>Chess Clock</h1>
+    <button id="btn-mute" class="mute-btn" aria-label="Toggle sound">
+      <svg class="icon-sound-on" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+        <path d="M19.07 4.93a10 10 0 010 14.14"/>
+        <path d="M15.54 8.46a5 5 0 010 7.07"/>
+      </svg>
+      <svg class="icon-sound-off" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+        <line x1="23" y1="9" x2="17" y2="15"/>
+        <line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+    </button>
     <p class="subtitle">Time per player</p>
     <div class="time-picker">
       <div class="wheel-group">
         <div class="wheel-col">
           <div class="wheel-container">
             <div class="wheel-highlight"></div>
-            <div class="wheel-mask top"></div>
-            <div class="wheel-mask bottom"></div>
-            <div class="wheel" id="wheel-hours"></div>
+            <div class="wheel" id="wheel-minutes"></div>
           </div>
-          <div class="wheel-label">hr</div>
+          <div class="wheel-label">min</div>
         </div>
         <div class="wheel-col">
           <div class="wheel-container">
             <div class="wheel-highlight"></div>
-            <div class="wheel-mask top"></div>
-            <div class="wheel-mask bottom"></div>
-            <div class="wheel" id="wheel-minutes"></div>
+            <div class="wheel" id="wheel-increment"></div>
           </div>
-          <div class="wheel-label">min</div>
+          <div class="wheel-label">+s/move</div>
         </div>
       </div>
       <div class="presets">
