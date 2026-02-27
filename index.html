@@ -17,11 +17,37 @@
   <!-- Setup Screen -->
   <div id="setup-screen" class="screen active">
     <h1>Chess Clock</h1>
-    <p class="subtitle">Select time per player</p>
-    <div class="time-buttons">
-      <button class="time-btn" data-minutes="1">1 min</button>
-      <button class="time-btn" data-minutes="5">5 min</button>
-      <button class="time-btn" data-minutes="10">10 min</button>
+    <p class="subtitle">Time per player</p>
+    <div class="time-picker">
+      <div class="wheel-group">
+        <div class="wheel-col">
+          <div class="wheel-container">
+            <div class="wheel-highlight"></div>
+            <div class="wheel-mask top"></div>
+            <div class="wheel-mask bottom"></div>
+            <div class="wheel" id="wheel-hours"></div>
+          </div>
+          <div class="wheel-label">hr</div>
+        </div>
+        <div class="wheel-col">
+          <div class="wheel-container">
+            <div class="wheel-highlight"></div>
+            <div class="wheel-mask top"></div>
+            <div class="wheel-mask bottom"></div>
+            <div class="wheel" id="wheel-minutes"></div>
+          </div>
+          <div class="wheel-label">min</div>
+        </div>
+      </div>
+      <div class="presets">
+        <button class="preset-chip" data-minutes="1">1m</button>
+        <button class="preset-chip" data-minutes="3">3m</button>
+        <button class="preset-chip" data-minutes="5">5m</button>
+        <button class="preset-chip" data-minutes="10">10m</button>
+        <button class="preset-chip" data-minutes="15">15m</button>
+        <button class="preset-chip" data-minutes="30">30m</button>
+      </div>
+      <button class="start-btn" id="btn-start">Start</button>
     </div>
     <button id="btn-install" class="install-btn" hidden>Install App</button>
   </div>
@@ -41,6 +67,7 @@
 
     <div id="controls">
       <button id="btn-pause" class="control-btn" aria-label="Pause">&#10074;&#10074;</button>
+      <span id="move-counter" class="move-counter">Move 1</span>
       <button id="btn-reset" class="control-btn" aria-label="Reset">&#8634;</button>
     </div>
 

@@ -10,7 +10,11 @@
   const playerBottom = document.getElementById('player-bottom');
   const btnPause = document.getElementById('btn-pause');
   const btnReset = document.getElementById('btn-reset');
-  const timeButtons = document.querySelectorAll('.time-btn');
+  const moveCounter = document.getElementById('move-counter');
+  const wheelHours = document.getElementById('wheel-hours');
+  const wheelMinutes = document.getElementById('wheel-minutes');
+  const btnStart = document.getElementById('btn-start');
+  const presetChips = document.querySelectorAll('.preset-chip');
 
   // ---- State ----
   let timeTopMs = 0;
@@ -20,6 +24,7 @@
   let intervalId = null;
   let lastTick = 0;
   let initialMs = 0;
+  let halfMoves = 0;
 
   // ---- Audio feedback ----
   function beep(frequency, duration) {
@@ -66,6 +71,9 @@
     playerBottom.classList.toggle('time-up', timeBotMs <= 0);
 
     btnPause.innerHTML = running ? '&#10074;&#10074;' : '&#9654;';
+
+    var moveNum = Math.floor(halfMoves / 2) + 1;
+    moveCounter.textContent = 'Move ' + moveNum;
   }
 
   // ---- Game loop ----
@@ -122,6 +130,7 @@
       // First tap: start the game – tapped player ends their turn
       activePlayer = tappedSide === 'top' ? 'bottom' : 'top';
       running = true;
+      halfMoves = 1;
       startTicking();
       clickSound();
       render();
@@ -133,6 +142,7 @@
     // Switch turns: only the active player can tap to end their turn
     if (activePlayer === tappedSide) {
       activePlayer = tappedSide === 'top' ? 'bottom' : 'top';
+      halfMoves++;
       lastTick = performance.now();
       clickSound();
       render();
@@ -167,27 +177,93 @@
     stopTicking();
     running = false;
     activePlayer = null;
+    halfMoves = 0;
     setupScreen.classList.add('active');
     gameScreen.classList.remove('active');
   });
 
-  // ---- Setup screen ----
-  timeButtons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var minutes = parseInt(btn.getAttribute('data-minutes'), 10);
-      initialMs = minutes * 60 * 1000;
-      timeTopMs = initialMs;
-      timeBotMs = initialMs;
-      activePlayer = null;
-      running = false;
+  // ---- Wheel Picker ----
+  var ITEM_H = 40;
+  var VISIBLE_ITEMS = 5;
+  var PAD_COUNT = Math.floor(VISIBLE_ITEMS / 2);
 
-      render();
-      setupScreen.classList.remove('active');
-      gameScreen.classList.add('active');
+  var hourValues = [];
+  for (var i = 0; i <= 3; i++) hourValues.push(i);
 
-      // Attempt to keep screen awake
-      requestWakeLock();
+  var minuteValues = [];
+  for (var i = 0; i <= 59; i++) minuteValues.push(i);
+
+  function populateWheel(wheel, values, formatFn) {
+    wheel.innerHTML = '';
+    for (var i = 0; i < PAD_COUNT; i++) {
+      var spacer = document.createElement('div');
+      spacer.className = 'wheel-item wheel-spacer';
+      wheel.appendChild(spacer);
+    }
+    values.forEach(function (val) {
+      var item = document.createElement('div');
+      item.className = 'wheel-item';
+      item.textContent = formatFn(val);
+      wheel.appendChild(item);
     });
+    for (var i = 0; i < PAD_COUNT; i++) {
+      var spacer = document.createElement('div');
+      spacer.className = 'wheel-item wheel-spacer';
+      wheel.appendChild(spacer);
+    }
+  }
+
+  function getWheelIndex(wheel) {
+    var idx = Math.round(wheel.scrollTop / ITEM_H);
+    return Math.max(0, idx);
+  }
+
+  function scrollWheelTo(wheel, index, smooth) {
+    wheel.scrollTo({
+      top: index * ITEM_H,
+      behavior: smooth ? 'smooth' : 'instant'
+    });
+  }
+
+  populateWheel(wheelHours, hourValues, function (v) { return String(v); });
+  populateWheel(wheelMinutes, minuteValues, function (v) { return v < 10 ? '0' + v : String(v); });
+
+  // Set default: 5 minutes
+  setTimeout(function () {
+    scrollWheelTo(wheelHours, 0, false);
+    scrollWheelTo(wheelMinutes, 5, false);
+  }, 0);
+
+  // Preset chips scroll the wheels to the corresponding position
+  presetChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var mins = parseInt(chip.getAttribute('data-minutes'), 10);
+      var h = Math.floor(mins / 60);
+      var m = mins % 60;
+      scrollWheelTo(wheelHours, h, true);
+      scrollWheelTo(wheelMinutes, m, true);
+    });
+  });
+
+  // Start button reads wheel values and begins the game
+  btnStart.addEventListener('click', function () {
+    var hIdx = Math.min(getWheelIndex(wheelHours), hourValues.length - 1);
+    var mIdx = Math.min(getWheelIndex(wheelMinutes), minuteValues.length - 1);
+    var totalMs = (hourValues[hIdx] * 60 + minuteValues[mIdx]) * 60 * 1000;
+    if (totalMs <= 0) return;
+
+    initialMs = totalMs;
+    timeTopMs = initialMs;
+    timeBotMs = initialMs;
+    activePlayer = null;
+    running = false;
+    halfMoves = 0;
+
+    render();
+    setupScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+
+    requestWakeLock();
   });
 
   // ---- Wake Lock (keep screen on during game) ----
