@@ -34,19 +34,20 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
 }
 
 #setup-screen h1 {
-  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-size: clamp(2rem, 7vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 #setup-screen .subtitle {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
   color: #aaa;
+  margin: 0;
 }
 
 /* ---- Time Picker (Wheel) ---- */
@@ -55,7 +56,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  gap: 0.8rem;
   width: 100%;
   max-width: 400px;
 }
@@ -63,7 +64,7 @@ html, body {
 .wheel-group {
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
+  gap: 1.5rem;
 }
 
 .wheel-col {
@@ -133,8 +134,8 @@ html, body {
   background: transparent;
   border: 1px solid #555;
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,25 +164,28 @@ html, body {
   display: block;
 }
 
-/* ---- Presets ---- */
+/* ---- Presets (2×2 grid under each wheel) ---- */
 
-.presets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
+.presets-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  width: 100%;
 }
 
 .preset-chip {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  padding: 0.4rem 0.9rem;
+  padding: 0.3rem 0;
   border: 1px solid #533483;
-  border-radius: 2rem;
+  border-radius: 1.2rem;
   background: transparent;
   color: #fff;
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
+  text-align: center;
+  min-width: 0;
 }
 
 .preset-chip:hover {
@@ -196,9 +200,9 @@ html, body {
 /* ---- Start Button ---- */
 
 .start-btn {
-  font-size: clamp(1.3rem, 5vw, 1.8rem);
+  font-size: clamp(1.2rem, 4.5vw, 1.6rem);
   font-weight: 700;
-  padding: 0.9rem 2.5rem;
+  padding: 0.7rem 2rem;
   border: none;
   border-radius: 1rem;
   background: #1a4731;
@@ -343,6 +347,59 @@ html, body {
 
 /* ---- Responsive tweaks ---- */
 
+/* Compact setup for shorter viewports (1024x768 and similar) */
+@media (max-height: 768px) {
+  #setup-screen {
+    gap: 0.6rem;
+    padding: 1rem 1.5rem;
+  }
+  #setup-screen h1 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+  }
+  .mute-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .mute-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+  .time-picker {
+    gap: 0.5rem;
+  }
+  .start-btn {
+    padding: 0.6rem 2rem;
+  }
+}
+
+@media (max-height: 600px) {
+  #setup-screen {
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+  }
+  #setup-screen h1 {
+    font-size: 1.6rem;
+  }
+  #setup-screen .subtitle {
+    font-size: 0.95rem;
+  }
+  .wheel-item {
+    font-size: 1.3rem;
+  }
+  .preset-chip {
+    font-size: 0.8rem;
+    padding: 0.25rem 0;
+  }
+  .presets-col {
+    gap: 0.25rem;
+    margin-top: 0.3rem;
+  }
+  .start-btn {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
 @media (max-height: 500px) {
   .timer {
     font-size: clamp(2.5rem, 14vw, 5rem);
@@ -355,15 +412,15 @@ html, body {
 /* ---- Install Button ---- */
 
 .install-btn {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
   font-weight: 600;
-  padding: 0.8rem 2rem;
+  padding: 0.6rem 1.5rem;
   border: 2px solid #533483;
   border-radius: 0.75rem;
   background: #533483;
   color: #fff;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   transition: transform 0.1s, background 0.15s;
 }
 

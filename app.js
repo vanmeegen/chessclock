@@ -15,7 +15,8 @@
   const wheelIncrement = document.getElementById('wheel-increment');
   const btnStart = document.getElementById('btn-start');
   const btnMute = document.getElementById('btn-mute');
-  const presetChips = document.querySelectorAll('.preset-chip');
+  const presetMinuteChips = document.querySelectorAll('.preset-chip[data-minutes]');
+  const presetIncrementChips = document.querySelectorAll('.preset-chip[data-increment]');
 
   // ---- State ----
   let timeTopMs = 0;
@@ -247,11 +248,18 @@
     scrollWheelTo(wheelIncrement, 0, false);
   }, 0);
 
-  // Preset chips scroll the minutes wheel to the corresponding position
-  presetChips.forEach(function (chip) {
+  // Preset chips scroll the wheels to the corresponding position
+  presetMinuteChips.forEach(function (chip) {
     chip.addEventListener('click', function () {
       var mins = parseInt(chip.getAttribute('data-minutes'), 10);
       scrollWheelTo(wheelMinutes, mins - 1, true);  // index = value - 1
+    });
+  });
+
+  presetIncrementChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var inc = parseInt(chip.getAttribute('data-increment'), 10);
+      scrollWheelTo(wheelIncrement, inc, true);  // index = value (starts at 0)
     });
   });
 
