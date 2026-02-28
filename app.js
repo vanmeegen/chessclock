@@ -11,9 +11,10 @@
   const btnPause = document.getElementById('btn-pause');
   const btnReset = document.getElementById('btn-reset');
   const moveCounter = document.getElementById('move-counter');
-  const wheelHours = document.getElementById('wheel-hours');
   const wheelMinutes = document.getElementById('wheel-minutes');
+  const wheelIncrement = document.getElementById('wheel-increment');
   const btnStart = document.getElementById('btn-start');
+  const btnMute = document.getElementById('btn-mute');
   const presetChips = document.querySelectorAll('.preset-chip');
 
   // ---- State ----
@@ -24,7 +25,9 @@
   let intervalId = null;
   let lastTick = 0;
   let initialMs = 0;
+  let incrementMs = 0;
   let halfMoves = 0;
+  let muted = false;
 
   // ---- Audio feedback ----
   function beep(frequency, duration) {
@@ -44,11 +47,11 @@
   }
 
   function clickSound() {
-    beep(800, 50);
+    if (!muted) beep(800, 50);
   }
 
   function timeUpSound() {
-    beep(300, 600);
+    if (!muted) beep(300, 600);
   }
 
   // ---- Helpers ----
@@ -141,6 +144,10 @@
 
     // Switch turns: only the active player can tap to end their turn
     if (activePlayer === tappedSide) {
+      if (incrementMs > 0) {
+        if (tappedSide === 'top') timeTopMs += incrementMs;
+        else timeBotMs += incrementMs;
+      }
       activePlayer = tappedSide === 'top' ? 'bottom' : 'top';
       halfMoves++;
       lastTick = performance.now();
@@ -182,16 +189,22 @@
     gameScreen.classList.remove('active');
   });
 
+  // ---- Mute Toggle ----
+  btnMute.addEventListener('click', function () {
+    muted = !muted;
+    btnMute.classList.toggle('muted', muted);
+  });
+
   // ---- Wheel Picker ----
   var ITEM_H = 40;
-  var VISIBLE_ITEMS = 5;
-  var PAD_COUNT = Math.floor(VISIBLE_ITEMS / 2);
-
-  var hourValues = [];
-  for (var i = 0; i <= 3; i++) hourValues.push(i);
+  var VISIBLE_ITEMS = 1;
+  var PAD_COUNT = 0;
 
   var minuteValues = [];
-  for (var i = 0; i <= 59; i++) minuteValues.push(i);
+  for (var i = 1; i <= 120; i++) minuteValues.push(i);
+
+  var incrementValues = [];
+  for (var i = 0; i <= 60; i++) incrementValues.push(i);
 
   function populateWheel(wheel, values, formatFn) {
     wheel.innerHTML = '';
@@ -225,34 +238,32 @@
     });
   }
 
-  populateWheel(wheelHours, hourValues, function (v) { return String(v); });
-  populateWheel(wheelMinutes, minuteValues, function (v) { return v < 10 ? '0' + v : String(v); });
+  populateWheel(wheelMinutes, minuteValues, function (v) { return String(v); });
+  populateWheel(wheelIncrement, incrementValues, function (v) { return String(v); });
 
-  // Set default: 5 minutes
+  // Set default: 5 minutes, 0 increment
   setTimeout(function () {
-    scrollWheelTo(wheelHours, 0, false);
-    scrollWheelTo(wheelMinutes, 5, false);
+    scrollWheelTo(wheelMinutes, 4, false);  // index 4 = value 5
+    scrollWheelTo(wheelIncrement, 0, false);
   }, 0);
 
-  // Preset chips scroll the wheels to the corresponding position
+  // Preset chips scroll the minutes wheel to the corresponding position
   presetChips.forEach(function (chip) {
     chip.addEventListener('click', function () {
       var mins = parseInt(chip.getAttribute('data-minutes'), 10);
-      var h = Math.floor(mins / 60);
-      var m = mins % 60;
-      scrollWheelTo(wheelHours, h, true);
-      scrollWheelTo(wheelMinutes, m, true);
+      scrollWheelTo(wheelMinutes, mins - 1, true);  // index = value - 1
     });
   });
 
   // Start button reads wheel values and begins the game
   btnStart.addEventListener('click', function () {
-    var hIdx = Math.min(getWheelIndex(wheelHours), hourValues.length - 1);
     var mIdx = Math.min(getWheelIndex(wheelMinutes), minuteValues.length - 1);
-    var totalMs = (hourValues[hIdx] * 60 + minuteValues[mIdx]) * 60 * 1000;
+    var incIdx = Math.min(getWheelIndex(wheelIncrement), incrementValues.length - 1);
+    var totalMs = minuteValues[mIdx] * 60 * 1000;
     if (totalMs <= 0) return;
 
     initialMs = totalMs;
+    incrementMs = incrementValues[incIdx] * 1000;
     timeTopMs = initialMs;
     timeBotMs = initialMs;
     activePlayer = null;

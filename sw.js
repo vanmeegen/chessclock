@@ -1,4 +1,4 @@
-var CACHE_NAME = 'chess-clock-v2';
+var CACHE_NAME = 'chess-clock-v3';
 var ASSETS = [
   './',
   './index.html',
