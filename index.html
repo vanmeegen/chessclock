@@ -16,19 +16,21 @@
 <body>
   <!-- Setup Screen -->
   <div id="setup-screen" class="screen active">
-    <h1>Chess Clock</h1>
-    <button id="btn-mute" class="mute-btn" aria-label="Toggle sound">
-      <svg class="icon-sound-on" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-        <path d="M19.07 4.93a10 10 0 010 14.14"/>
-        <path d="M15.54 8.46a5 5 0 010 7.07"/>
-      </svg>
-      <svg class="icon-sound-off" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-        <line x1="23" y1="9" x2="17" y2="15"/>
-        <line x1="17" y1="9" x2="23" y2="15"/>
-      </svg>
-    </button>
+    <div class="title-bar">
+      <h1>Chess Clock</h1>
+      <button id="btn-mute" class="mute-btn" aria-label="Toggle sound">
+        <svg class="icon-sound-on" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <path d="M19.07 4.93a10 10 0 010 14.14"/>
+          <path d="M15.54 8.46a5 5 0 010 7.07"/>
+        </svg>
+        <svg class="icon-sound-off" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <line x1="23" y1="9" x2="17" y2="15"/>
+          <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+      </button>
+    </div>
     <p class="subtitle">Time per player</p>
     <div class="time-picker">
       <div class="wheel-group">
@@ -53,9 +55,9 @@
           <div class="wheel-label">+s/move</div>
           <div class="presets-col">
             <button class="preset-chip" data-increment="0">0</button>
-            <button class="preset-chip" data-increment="1">1</button>
             <button class="preset-chip" data-increment="2">2</button>
-            <button class="preset-chip" data-increment="3">3</button>
+            <button class="preset-chip" data-increment="5">5</button>
+            <button class="preset-chip" data-increment="10">10</button>
           </div>
         </div>
       </div>
