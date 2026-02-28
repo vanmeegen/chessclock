@@ -197,9 +197,13 @@
   });
 
   // ---- Wheel Picker ----
-  var ITEM_H = 40;
   var VISIBLE_ITEMS = 1;
   var PAD_COUNT = 0;
+
+  function getItemH() {
+    var item = wheelMinutes.querySelector('.wheel-item');
+    return item ? item.offsetHeight : 48;
+  }
 
   var minuteValues = [];
   for (var i = 1; i <= 120; i++) minuteValues.push(i);
@@ -228,13 +232,15 @@
   }
 
   function getWheelIndex(wheel) {
-    var idx = Math.round(wheel.scrollTop / ITEM_H);
+    var h = getItemH();
+    var idx = Math.round(wheel.scrollTop / h);
     return Math.max(0, idx);
   }
 
   function scrollWheelTo(wheel, index, smooth) {
+    var h = getItemH();
     wheel.scrollTo({
-      top: index * ITEM_H,
+      top: index * h,
       behavior: smooth ? 'smooth' : 'instant'
     });
   }
@@ -261,6 +267,15 @@
       var inc = parseInt(chip.getAttribute('data-increment'), 10);
       scrollWheelTo(wheelIncrement, inc, true);  // index = value (starts at 0)
     });
+  });
+
+  // Re-snap wheels on resize (e.g. orientation change)
+  window.addEventListener('resize', function () {
+    if (!setupScreen.classList.contains('active')) return;
+    var mIdx = getWheelIndex(wheelMinutes);
+    var iIdx = getWheelIndex(wheelIncrement);
+    scrollWheelTo(wheelMinutes, mIdx, false);
+    scrollWheelTo(wheelIncrement, iIdx, false);
   });
 
   // Start button reads wheel values and begins the game
